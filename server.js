@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 import dotenv  from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
-import clientRoutes from './route/clientRoutes.js';
+import clientRoutes from './routes/clientRoutes.js';
+import projectRoutes from './routes/projectRoutes.js';
 
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
+app.use('/api/projects', projectRoutes);
 const PORT = process.env.PORT || 3000;
 
 mongoose.connect(process.env.MONGO_URI)
