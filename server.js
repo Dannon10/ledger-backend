@@ -5,7 +5,8 @@ import authRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
 import clientRoutes from './routes/clientRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
-
+import invoiceRoutes from './routes/invoiceRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/invoices', invoiceRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 const PORT = process.env.PORT || 3000;
 
 mongoose.connect(process.env.MONGO_URI)
