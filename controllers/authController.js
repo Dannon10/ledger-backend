@@ -1,6 +1,15 @@
 import bcrypt from 'bcryptjs';
-import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+
+const isProd = process.env.NODE_ENV === 'production';
+
+const cookieOptions = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+};
 
 export const register = async (req, res) => {
     try {
@@ -38,6 +47,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials' });
@@ -48,19 +58,13 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({
-            id: user._id, role: user.role
-        },
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
 
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        res.cookie('token', token, cookieOptions);
 
         res.status(200).json({
             id: user._id,
